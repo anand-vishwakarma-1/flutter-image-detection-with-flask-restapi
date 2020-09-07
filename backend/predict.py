@@ -9,11 +9,11 @@ import json
 import time
 
 device = torch_utils.select_device(device='0')
-model = Darknet(os.path.join(os.path.dirname(sys.argv[0]),'yolov3-tiny.cfg'), (608, 352))
-model.load_state_dict(torch.load(os.path.join(os.path.dirname(sys.argv[0]),'yolov3-tiny.pt'), map_location=device)['model'])
+model = Darknet(os.path.join(os.path.dirname(sys.argv[0]),'yolov3_tiny/yolov3-tiny.cfg'), (608, 352))
+model.load_state_dict(torch.load(os.path.join(os.path.dirname(sys.argv[0]),'yolov3_tiny/yolov3-tiny.pt'), map_location=device)['model'])
 model.to(device).eval()
 
-names = load_classes(os.path.join(os.path.dirname(sys.argv[0]),'coco.names'))
+names = load_classes(os.path.join(os.path.dirname(sys.argv[0]),'yolov3_tiny/coco.names'))
 colors = [[random.randint(0, 255) for _ in range(3)] for _ in range(len(names))]
 
 # imageName = 'image_picker142264259.jpg'
