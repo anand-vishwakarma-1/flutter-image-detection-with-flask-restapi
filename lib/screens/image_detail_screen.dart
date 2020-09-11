@@ -12,6 +12,7 @@ import '../functions/server_connection.dart';
 class ImageDetail extends StatefulWidget {
   static const routeName = "/image-detail";
   bool _isDeleted = false;
+  bool _isPredicting = false;
 
   @override
   _ImageDetailState createState() => _ImageDetailState();
@@ -20,25 +21,24 @@ class ImageDetail extends StatefulWidget {
 class _ImageDetailState extends State<ImageDetail> {
   @override
   Widget build(BuildContext context) {
-    bool _isPredicting = false;
     String imageId = ModalRoute.of(context).settings.arguments as String;
     if (widget._isDeleted) {
       return Container();
     }
-    
+
     final imageData = Provider.of<ImageDataProvider>(
       context,
       listen: false,
     ).findById(imageId);
 
     void _predict(BuildContext ctx) async {
+      String result;
       if (Provider.of<FLaskProvider>(context, listen: false).connection) {
         setState(() {
-          _isPredicting = true;
+          widget._isPredicting = true;
         });
-        final result =
-            await Provider.of<ImageDataProvider>(context, listen: false)
-                .updateImage(
+        result = await Provider.of<ImageDataProvider>(context, listen: false)
+            .updateImage(
           imageId,
           await Provider.of<FLaskProvider>(context, listen: false)
               .getPredictions(
@@ -46,17 +46,12 @@ class _ImageDetailState extends State<ImageDetail> {
             imageData.imagePath,
           ),
         );
-        if (result == "success") {
-          showSnackBar(ctx, 'Predicted Successfully');
-        } else if (result == "failed") {
-          showSnackBar(ctx, 'There was some Error');
-        }
-        setState(() {
-          _isPredicting = false;
-        });
       } else {
         showSnackBar(ctx, 'Not Connected to Server');
       }
+      setState(() {
+        widget._isPredicting = false;
+      });
     }
 
     final mediaQuery = MediaQuery.of(context);
@@ -71,7 +66,7 @@ class _ImageDetailState extends State<ImageDetail> {
               icon: Icon(Icons.delete),
               onPressed: () async {
                 widget._isDeleted = true;
-                Navigator.pop(context,imageId);
+                Navigator.pop(context, imageId);
               },
             ),
           ),
@@ -94,7 +89,7 @@ class _ImageDetailState extends State<ImageDetail> {
               ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: _isPredicting
+      body: widget._isPredicting
           ? Center(
               child: CircularProgressIndicator(),
             )

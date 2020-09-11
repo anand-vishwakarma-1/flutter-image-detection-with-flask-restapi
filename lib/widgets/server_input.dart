@@ -12,6 +12,7 @@ class _ServerInputState extends State<ServerInput> {
   final _urlController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isConnecting = false;
+  bool _isInitialized = false;
 
   void _establishConnection() async {
     final isValid = _formKey.currentState.validate();
@@ -26,13 +27,11 @@ class _ServerInputState extends State<ServerInput> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _urlController.text = Provider.of<FLaskProvider>(context,listen: false).routeUrl;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    if (!_isInitialized) {
+      _isInitialized = true;
+      _urlController.text = Provider.of<FLaskProvider>(context).routeUrl;
+    }
     return SingleChildScrollView(
       child: Card(
         elevation: 10,
@@ -50,7 +49,6 @@ class _ServerInputState extends State<ServerInput> {
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Server URL'),
                   controller: _urlController,
-                  onFieldSubmitted: (_) => _establishConnection,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter a url';

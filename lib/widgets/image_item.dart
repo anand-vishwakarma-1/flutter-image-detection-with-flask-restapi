@@ -20,7 +20,12 @@ class ImageItem extends StatelessWidget {
             Navigator.of(context)
                 .pushNamed(ImageDetail.routeName, arguments: imageData.id)
                 .then((value) async {
-              if (value != null) {}
+              if (value != null) {
+                await Provider.of<ImageDataProvider>(context, listen: false)
+                    .deleteImage(value);
+                showSnackBar(
+                    context, "Image (${imageData.id}) Deleted Successfully");
+              }
             });
           },
           child: Hero(
@@ -63,7 +68,6 @@ class ImageItem extends StatelessWidget {
                   context, "Image (${imageData.id}) Deleted Successfully");
             },
           ),
-
         ),
       ),
     );

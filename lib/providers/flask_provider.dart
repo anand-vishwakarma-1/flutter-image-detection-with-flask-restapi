@@ -9,7 +9,7 @@ import 'package:path/path.dart' as path;
 
 class FLaskProvider with ChangeNotifier {
   bool _isConnected = false;
-  String _routeUrl;
+  String _routeUrl = "";
   bool _isInitialized = false;
 
   bool get isIntialized {
@@ -40,6 +40,7 @@ class FLaskProvider with ChangeNotifier {
         prefs.setString('routeUrl', _routeUrl);
         return responseData['status'];
       } else {
+        _routeUrl = "";
         return "failed";
       }
     } catch (e) {
@@ -96,6 +97,11 @@ class FLaskProvider with ChangeNotifier {
     } catch (e) {
       return "";
     }
+  }
+
+  void disconnect() {
+    _isConnected = false;
+    notifyListeners();
   }
 
   Future<List> getPredictions(String imageName, String imagePath) async {
