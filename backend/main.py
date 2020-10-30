@@ -19,3 +19,5 @@ def home():
 app.run(port=5000,debug=False)
 
 # http://10.0.2.2:5000
+
+# http://127.0.0.1:5000/upload
