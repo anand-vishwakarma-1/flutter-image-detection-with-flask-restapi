@@ -30,6 +30,7 @@
 .pub-cache/
 .pub/
 /build/
+/backend/uploaded_images/
 
 # Web related
 lib/generated_plugin_registrant.dart
