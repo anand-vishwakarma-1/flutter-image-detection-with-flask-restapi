@@ -1,6 +1,6 @@
 import os,sys
 sys.path.append(os.path.dirname(sys.argv[0]))
-from flask import Flask,jsonify
+from flask import Flask,jsonify, render_template
 
 import upload as upload
 import predict as predict
@@ -10,6 +10,11 @@ app = Flask(__name__)
 app.secret_key = os.urandom(16)
 app.register_blueprint(upload.mod)
 app.register_blueprint(predict.mod)
+
+@mod.route('/welcome')
+def new_function():
+    return render_template('practical.html')
+
 @app.route('/')
 def home():
     return jsonify({
